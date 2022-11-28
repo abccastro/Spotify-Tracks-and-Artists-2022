@@ -5,52 +5,11 @@ import dbconnect
 
 
 def startApplication():
-    #playlist_list = displaySpotifyPlaylists()
-    #print(playlist_list)
-    #playlist_num = input("Enter playlist number: ").strip()
-    #song_list = getSpotifyPlaylist(playlist_list[int(playlist_num)-1][1])
+    tracks = getSpotifyTracks('2022')
+    refreshTracks(tracks)
 
-    #tracks = getSpotifyTracks('2022')
-    #refreshTracks(tracks)
-
-    artists = getSpotifyArtists('2022')
+    artists = getSpotifyArtists()
     refreshArtists(artists)
-
-
-def displaySpotifyPlaylists():
-    playlist_list = []
-    try:
-        print("List of Spotify Playlist")
-
-        sp = spotifyconnect.getSpotifyConnection()
-        playlists = sp.user_playlists('spotify')
-
-        while playlists:
-            for i, playlist in enumerate(playlists['items']):
-                playlist_num = i + 1 + playlists['offset']
-                playlist_list.append([playlist_num, playlist['uri'][17:], playlist['name']])
-                #print("%4d %s" % (playlist_num, playlist['name']))
-
-            if playlists['next']:
-                playlists = sp.next(playlists)
-            else:
-                playlists = None
-
-    except Exception as err:
-        print(f"Unexpected error {displaySpotifyPlaylists.__name__}: {err}")
-        playlist = []
-
-    return playlist_list
-
-
-def getSpotifyPlaylist(playlist_uri):
-    try:
-        sp = spotifyconnect.getSpotifyConnection()
-        song_list = sp.playlist_items(playlist_uri)['items']
-    except Exception as err:
-        print(f"Unexpected error {getSpotifyPlaylist.__name__}: {err}")
-
-    return song_list
 
 
 def getSpotifyTracks(year):
@@ -67,6 +26,9 @@ def getSpotifyTracks(year):
                          "track_name": t['name'],
                          "track_popularity": t['popularity']}
                 track_list.append(track)
+        else:
+            print("Successfully retrieved all tracks in Spotify")
+            print(f"Total tracks: {len(track_list)}")
 
     except Exception as err:
         print(f"Unexpected error {getSpotifyTracks.__name__}: {err}")
@@ -74,20 +36,23 @@ def getSpotifyTracks(year):
     return track_list
 
 
-def getSpotifyArtists(year):
+def getSpotifyArtists():
     artist_list = []
     try:
         sp = spotifyconnect.getSpotifyConnection()
         artist_ids = getArtistIDsFromTrack()
 
-        for id in artist_ids:
-            a = sp.artist(id)
-            artist = {"id": id,
+        for artist_id in artist_ids:
+            a = sp.artist(artist_id)
+            artist = {"id": artist_id,
                       "name": a['name'],
                       "genres": a['genres'],
                       "popularity": a['popularity'],
                       "followers": a['followers']['total']}
             artist_list.append(artist)
+        else:
+            print("Successfully retrieved all tracks from Spotify")
+            print(f"Total artists: {len(artist_list)}")
 
     except Exception as err:
         print(f"Unexpected error {getSpotifyArtists.__name__}: {err}")
@@ -116,8 +81,11 @@ def refreshTracks(song_list):
     try:
         database = dbconnect.getDBConnection()
         my_collection = database["track_info"]
-        my_collection.delete_many({})    # clear the content
+        my_collection.delete_many({})       # clear the content
         my_collection.insert_many(song_list)
+
+        print("Successfully saved all tracks")
+
     except Exception as err:
         print(f"Unexpected error {refreshTracks.__name__}: {err}")
 
@@ -137,7 +105,8 @@ def refreshArtists(artist_list):
         else:
             my_collection.insert_one(artist)
 
-        my_collection.insert_many(artist_list)
+        print("Successfully saved all artists")
+
     except Exception as err:
         print(f"Unexpected error on {refreshArtists.__name__}: {err}")
 
