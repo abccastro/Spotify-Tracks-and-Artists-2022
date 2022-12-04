@@ -4,6 +4,7 @@ import pickle
 def main():
     print("1. View Config")
     print("2. Add Config")
+    print("3. Delete")
 
     while True:
         command = input("What do you want to do? ")
@@ -13,6 +14,8 @@ def main():
             viewConfig(config)
         elif command == "2":
             addConfig(config)
+        elif command == "3":
+            delConfig(config)
         else:
             break
 
@@ -27,6 +30,12 @@ def addConfig(config):
     value = input("Enter config value: ")
 
     config[name] = value
+    saveConfig(config)
+
+
+def delConfig(config):
+    name = input("Enter config name: ")
+    config.pop(name)
     saveConfig(config)
 
 
