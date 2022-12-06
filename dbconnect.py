@@ -19,7 +19,7 @@ def getDBConnection():
     :return: database connection
     """
     try:
-        with open("config", "rb") as output_file:
+        with open("dbconfig", "rb") as output_file:
             config = pickle.load(output_file)
 
         conn = "mongodb+srv://%s:%s@%s/?retryWrites=true&w=majority" % (config["db_username"],

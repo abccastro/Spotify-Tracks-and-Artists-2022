@@ -40,13 +40,13 @@ def delConfig(config):
 
 
 def saveConfig(config):
-    with open("config", "wb") as input_file:
+    with open("dbconfig", "wb") as input_file:
         pickle.dump(config, input_file)
 
 
 def readConfig():
     try:
-        with open("config", "rb") as output_file:
+        with open("dbconfig", "rb") as output_file:
             config = pickle.load(output_file)
     except EOFError:
         config = {}
