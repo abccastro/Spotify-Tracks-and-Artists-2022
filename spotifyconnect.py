@@ -16,6 +16,10 @@ init(autoreset=True)
 
 
 def getSpotifyConnection():
+    """
+    The function that connects to Spotify using the valid client credentials
+    :return Spotify: Spotify validated instance connection
+    """
     try:
         spotify_config = dbconnect.getSpotifyConfig()
 
@@ -31,31 +35,15 @@ def getSpotifyConnection():
     return sp
 
 
-def getSpotifyTracks(year, curr_datetime):
-    track_list = []
-    try:
-        sp = spotifyconnect.getSpotifyConnection()
-
-        for i in range(0, 1000, 50):
-            track_results = sp.search(q='year:' + year, type='track', limit=50, offset=i, market="US")
-            for t in track_results['tracks']['items']:
-                track = {"id": t['id'],
-                         "name": t['name'],
-                         "album": t['album']['name'],
-                         "popularity": t['popularity'],
-                         "update_datetime": curr_datetime.strftime("%d/%m/%Y %H:%M:%S")
-                         }
-                track_list.append(track)
-        else:
-            print(f"{fg.GREEN}Successfully retrieved {len(track_list)} tracks from Spotify")
-
-    except Exception as err:
-        print(f"{fg.RED}Unexpected error {getSpotifyTracks.__name__}: {err}")
-
-    return track_list
-
-def getSpotifyArtists(year, curr_datetime):
+def getSpotifyArtists(year):
+    """
+    The function that gets tracks and artists from Spotify
+    :param str year: Year
+    :return: List of the artists with tracks
+    """
     artist_list = []
+    curr_datetime = datetime.now()
+
     try:
         sp = spotifyconnect.getSpotifyConnection()
 
@@ -90,7 +78,7 @@ def getSpotifyArtists(year, curr_datetime):
                     track_list.append(track)
                     artist_list[idx_artist[0]]['tracks'] = track_list
             else:
-                print(f"{fg.GREEN}Retrieved {len(artist_list)} records")
+                print(f"\tRetrieved {len(artist_list)} artists")
         else:
             print(f"{fg.GREEN}Total artists retrieved from Spotify: {len(artist_list)}")
 
@@ -98,32 +86,3 @@ def getSpotifyArtists(year, curr_datetime):
         print(f"{fg.RED}Unexpected error {getSpotifyArtists.__name__}: {err}")
 
     return artist_list
-
-'''
-def getSpotifyArtists(curr_datetime):
-    artist_list = []
-    try:
-        sp = spotifyconnect.getSpotifyConnection()
-        artist_id_list = dbconnect.getArtistIDsFromTrack()
-
-        for artist_id in artist_id_list:
-            a = sp.artist(artist_id)
-            artist = {"id": artist_id,
-                      "name": a['name'],
-                      "genres": a['genres'],
-                      "popularity": a['popularity'],
-                      "followers": a['followers']['total'],
-                      "update_datetime": curr_datetime.strftime("%d/%m/%Y %H:%M:%S")
-                      }
-            artist_list.append(artist)
-        else:
-            print(f"{fg.GREEN}Successfully retrieved {len(artist_list)} artists from Spotify")
-
-    except Exception as err:
-        print(f"{fg.RED}Unexpected error {getSpotifyArtists.__name__}: {err}")
-
-    return artist_list
-'''
-
-
-#getSpotifyArtists("2022", datetime.now())
