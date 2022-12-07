@@ -76,8 +76,8 @@ def startApplication():
             elif req_command == Command.View.value:
                 print()
                 print("1. Top 10 Artists with Most Number of Followers")
-                print("2. Top 10 Artists with Highest Popularity Rating")
-                print("3. Top 10 Tracks with Highest Popularity Rating")
+                print("2. Top 10 Artists with Highest Popularity Index")
+                print("3. Top 10 Tracks with Highest Popularity Index")
                 print("4. Number of Artists by Popularity Index (80 to 100)")
                 print("5. Number of Tracks by Popularity Index (80 to 100)")
 
