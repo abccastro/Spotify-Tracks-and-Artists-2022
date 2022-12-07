@@ -176,6 +176,19 @@ def getAllArtistsByPopularity():
     return artist_list
 
 
+def getAllTracksByPopularity():
+    try:
+        database = dbconnect.getDBConnection()
+        artist_info_col = database["artist_info"]
+        artist_list = artist_info_col.find({"status": {"$ne": "I"}}, {"_id": 0, "tracks": 1}).sort("tracks.popularity", -1)
+
+    except Exception as err:
+        print(f"{fg.RED}Unexpected error {getAllArtistsByPopularity.__name__}: {err}")
+        artist_list = None
+
+    return artist_list
+
+
 def getDeactivatedArtists():
     try:
         database = dbconnect.getDBConnection()

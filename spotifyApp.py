@@ -34,6 +34,8 @@ class Report(Enum):
     Artist_Follower = "1"
     Artist_Popularity = "2"
     Track_Popularity = "3"
+    Num_Artist_Popularity = "4"
+    Num_Track_Popularity = "5"
 
 def startApplication():
     print(f"{fg.CYAN}+++++++++++++++++++++++++++++++++++++++++++++++++++++")
@@ -73,9 +75,11 @@ def startApplication():
 
             elif req_command == Command.View.value:
                 print()
-                print("1. Top 20 Artists with Most Number of Followers")
+                print("1. Top 10 Artists with Most Number of Followers")
                 print("2. Top 10 Artists with Highest Popularity Rating")
                 print("3. Top 10 Tracks with Highest Popularity Rating")
+                print("4. Number of Artists by Popularity Index (80 to 100)")
+                print("5. Number of Tracks by Popularity Index (80 to 100)")
 
                 req_report = input(f"\n{ef.BRIGHT}Select one option from the list (1, 2 or 3): ").strip()
                 if req_report not in [elem.value for elem in Report]:
@@ -177,15 +181,25 @@ def viewReport(report_type):
                                        x_label='Popularity Index',
                                        title='Top 10 Artists with Highest Popularity Index')
 
-            popularity_counter = Counter([artist['popularity'] for artist in artist_list if artist['popularity'] > 80])
-            popularity_list = [i for i in range(81, 101)]
-            popularity_count_list = []
+        case Report.Track_Popularity.value:
 
-            for popularity in popularity_list:
-                if popularity in popularity_counter.keys():
-                    popularity_count_list.append(popularity_counter[popularity])
-                else:
-                    popularity_count_list.append(0)
+            track_list = list(dbconnect.getAllTracksByPopularity())
+            track_list = [track_list[idx]['tracks'][0] for idx in range(10)]
+            track_names = [track['name'] for track in track_list]
+            track_popularity = [track['popularity'] for track in track_list]
+
+            visualization.showBarGraph(track_popularity,
+                                       track_names,
+                                       add_val=True,
+                                       x_label='Popularity Index',
+                                       title='Top 10 Tracks with Highest Popularity Index')
+
+        case Report.Num_Artist_Popularity.value:
+
+            artist_list = list(dbconnect.getAllArtistsByPopularity())
+            popularity_counter = Counter([artist['popularity'] for artist in artist_list if artist['popularity'] >= 80])
+            popularity_list = [i for i in range(80, 101)]
+            popularity_count_list = popularityCounter(popularity_list, popularity_counter)
 
             visualization.showLineGraph(popularity_list,
                                         popularity_count_list,
@@ -193,8 +207,21 @@ def viewReport(report_type):
                                         y_label='Number of Artists',
                                         title='Number of Artists per Popularity Index')
 
-        case Report.Track_Popularity.value:
-            pass
+        case Report.Num_Track_Popularity.value:
+
+            track_list = list(dbconnect.getAllTracksByPopularity())
+            track_list = [track['tracks'][0] for track in track_list]
+
+            popularity_counter = Counter([track['popularity'] for track in track_list if track['popularity'] >= 80])
+            popularity_list = [i for i in range(80, 101)]
+            popularity_count_list = popularityCounter(popularity_list, popularity_counter)
+
+            visualization.showLineGraph(popularity_list,
+                                        popularity_count_list,
+                                        x_label='Popularity Index',
+                                        y_label='Number of Tracks',
+                                        title='Number of Tracks per Popularity Index')
+
 
 def refreshArtistInfo():
     print(f"\n{bg.YELLOW}{fg.BLACK} WARNING: All active artist profiles will be replaced by records from Spotify ")
@@ -237,6 +264,14 @@ def deactivateArtistInfo(artist_id):
     return True
 
 
+def popularityCounter(popularity_list, popularity_counter):
+    popularity_count_list = []
+    for popularity in popularity_list:
+        if popularity in popularity_counter.keys():
+            popularity_count_list.append(popularity_counter[popularity])
+        else:
+            popularity_count_list.append(0)
+    return popularity_count_list
+
 if __name__ == "__main__":
-    #startApplication()
-    viewReport(Report.Artist_Popularity.value)
+    startApplication()
