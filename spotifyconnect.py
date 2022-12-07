@@ -1,9 +1,8 @@
 """
-Connect to Spotify API
-
+Project Fall 2022 (BDM-11123)
 Submitted by:
-Auradee Castro
-Olivia Deguit
+- Auradee Castro
+- Olivia Deguit
 """
 from datetime import datetime
 import dbconnect

@@ -1,9 +1,8 @@
 """
-Connect to MongoDB
-
+Project Fall 2022 (BDM-11123)
 Submitted by:
-Auradee Castro
-Olivia Deguit
+- Auradee Castro
+- Olivia Deguit
 """
 import pickle
 import pymongo as pymongo
@@ -97,7 +96,7 @@ def searchArtistInfo(key, keyword):
     """
     The function that searches artists by artist name / genres using the specified keyword
     :param str key: Key in mongodb
-    :param str keyword: Keyword to search for artist name / generes
+    :param str keyword: Keyword to search for artist name / genres
     :return list artist_list: List of artists that matches the keyword
     """
     try:
@@ -112,32 +111,47 @@ def searchArtistInfo(key, keyword):
     return artist_list
 
 
-def searchDeactivatedArtistInfo():
+def getDeactivatedArtists():
+    """
+    The function that gets all artists with deactivated status
+    :return list artist_list: List of deactivated artists
+    """
     try:
         database = dbconnect.getDBConnection()
         artist_info_col = database["artist_info"]
-        artist_list = artist_info_col.find({"status": "I"}, {"_id": 0})
+        deactivated_artists = artist_info_col.find({"status": "I"}, {"_id": 0, "id": 1, "name": 1, "status": 1})
 
     except Exception as err:
-        print(f"{fg.RED}Unexpected error {searchDeactivatedArtistInfo.__name__}: {err}")
-        artist_list = []
+        print(f"{fg.RED}Unexpected error {getDeactivatedArtists.__name__}: {err}")
+        deactivated_artists = None
 
-    return artist_list
+    return deactivated_artists
 
 
-def deactivateArtistInfo(artist_id, flag):
+def changeArtistInfoStatus(artist_id, status_flag):
+    """
+    The function that deactivates/inactivates artist profile status
+    :param str artist_id: ID of the artist
+    :param str status_flag: Flag of the status. 'A' for activate. 'I' for deactivate.
+    :return bool: True is successfully deactivate/inactivated. False otherwise.
+    """
     try:
         database = dbconnect.getDBConnection()
         artist_info_col = database["artist_info"]
-        artist_info_col.update_one({"id": artist_id}, {"$set": {"status": "I" if flag else "A"}})
+        artist_info_col.update_one({"id": artist_id}, {"$set": {"status": "I" if status_flag else "A"}})
 
     except Exception as err:
-        print(f"{fg.RED}Unexpected error {deactivateArtistInfo.__name__}: {err}")
+        print(f"{fg.RED}Unexpected error {changeArtistInfoStatus.__name__}: {err}")
         return False
 
     return True
 
 def getArtistInfo(artist_id):
+    """
+    The function that gets artist information given the ID
+    :param str artist_id: ID of the artist
+    :return list artist_info: Artist information
+    """
     try:
         database = dbconnect.getDBConnection()
         artist_info_col = database["artist_info"]
@@ -151,6 +165,10 @@ def getArtistInfo(artist_id):
 
 
 def getAllArtistsByFollowers():
+    """
+    The function that gets all artists sorted by number of followers
+    :return list artist_list: List of artists
+    """
     try:
         database = dbconnect.getDBConnection()
         artist_info_col = database["artist_info"]
@@ -164,6 +182,10 @@ def getAllArtistsByFollowers():
 
 
 def getAllArtistsByPopularity():
+    """
+    The function that gets all artists sorted by the popularity index
+    :return list artist_list: List of artists
+    """
     try:
         database = dbconnect.getDBConnection()
         artist_info_col = database["artist_info"]
@@ -177,6 +199,10 @@ def getAllArtistsByPopularity():
 
 
 def getAllTracksByPopularity():
+    """
+    The function that gets all artists sorted by the tracks' popularity index
+    :return list artist_list: List of artists
+    """
     try:
         database = dbconnect.getDBConnection()
         artist_info_col = database["artist_info"]
@@ -188,15 +214,3 @@ def getAllTracksByPopularity():
 
     return artist_list
 
-
-def getDeactivatedArtists():
-    try:
-        database = dbconnect.getDBConnection()
-        artist_info_col = database["artist_info"]
-        deactivated_artists = artist_info_col.find({"status": "I"}, {"_id": 0, "id": 1, "name": 1, "status": 1})
-
-    except Exception as err:
-        print(f"{fg.RED}Unexpected error {getDeactivatedArtists.__name__}: {err}")
-        deactivated_artists = None
-
-    return deactivated_artists

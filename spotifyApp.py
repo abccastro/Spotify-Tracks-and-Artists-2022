@@ -1,9 +1,10 @@
 """
-Search and get Spotify tracks and artists
+Extract Spotify tracks and artists for year 2022. Save the records in MongoDB and create visualization.
 
+Project Fall 2022 (BDM-11123)
 Submitted by:
-Auradee Castro
-Olivia Deguit
+- Auradee Castro
+- Olivia Deguit
 """
 import spotifyconnect
 import dbconnect
@@ -123,7 +124,7 @@ def searchArtistInfo(selection):
             keyword = input("\nEnter keyword to search for track (by name): ").lower().strip()
             artist_list = list(dbconnect.searchArtistInfo("tracks.name", keyword))
         case Info.Deactivated.value:
-            artist_list = list(dbconnect.searchDeactivatedArtistInfo())
+            artist_list = list(dbconnect.getDeactivatedArtists())
 
     if len(artist_list) == 0:
         return False
@@ -156,7 +157,10 @@ def searchArtistInfo(selection):
 
 
 def viewReport(report_type):
-
+    """
+    The function that creates different types of report
+    :param str report_type: Type of report
+    """
     match report_type:
         case Report.Artist_Follower.value:
 
@@ -230,14 +234,18 @@ def refreshArtistInfo():
     if req_enable == 'y':
         print("Connecting to Spotify to get artist records...")
         artists = spotifyconnect.getSpotifyArtists('2022')
-        print("Saving artist records..")
+        print("Saving artist records... Please wait the process to complete.")
         dbconnect.refreshArtists(artists)
     else:
         print("No changes done")
 
 
 def deactivateArtistInfo(artist_id):
-
+    """
+    The function that deactivate or inactivate artist profile
+    :param str artist_id: ID of the artist
+    :return bool: True if successful action. False if ID does not exist.
+    """
     artist_info = list(dbconnect.getArtistInfo(artist_id))
     if len(artist_info) == 0:
         return False
@@ -247,7 +255,7 @@ def deactivateArtistInfo(artist_id):
     if artist_info[0]['status'] == 'I':
         req_enable = input(f"{ef.BRIGHT}Would you like to activate this artist profile? [y/Y]: ").lower().strip()
         if req_enable == 'y':
-            is_activated = dbconnect.deactivateArtistInfo(artist_id, False)
+            is_activated = dbconnect.changeArtistInfoStatus(artist_id, False)
             if is_activated:
                 print(f"{fg.GREEN}Successfully activated")
         else:
@@ -255,7 +263,7 @@ def deactivateArtistInfo(artist_id):
     else:
         req_disabled = input(f"{ef.BRIGHT}Are you sure you want to deactivate this artist profile? [y/Y]: ").lower().strip()
         if req_disabled == 'y':
-            is_deactivated = dbconnect.deactivateArtistInfo(artist_id, True)
+            is_deactivated = dbconnect.changeArtistInfoStatus(artist_id, True)
             if is_deactivated:
                 print(f"{fg.GREEN}Successfully deactivated")
         else:
@@ -265,6 +273,12 @@ def deactivateArtistInfo(artist_id):
 
 
 def popularityCounter(popularity_list, popularity_counter):
+    """
+    The function that counts the number of elements exist in the list
+    :param list popularity_list: Complete list of popularity index (81 to 100)
+    :param map popularity_counter: Map of popularity index with respective count
+    :return list: Complete list of popularity index with count
+    """
     popularity_count_list = []
     for popularity in popularity_list:
         if popularity in popularity_counter.keys():
@@ -272,6 +286,7 @@ def popularityCounter(popularity_list, popularity_counter):
         else:
             popularity_count_list.append(0)
     return popularity_count_list
+
 
 if __name__ == "__main__":
     startApplication()
