@@ -214,3 +214,15 @@ def getAllTracksByPopularity():
 
     return artist_list
 
+
+def deleteAllArtistProfiles():
+    """
+    The function that deletes all artist profiles
+    """
+    try:
+        database = dbconnect.getDBConnection()
+        artist_info_col = database["artist_info"]
+        artist_info_col.delete_many({})
+        print(f"{fg.GREEN}Successfully deleted all records")
+    except Exception as err:
+        print(f"{fg.RED}Unexpected error {deleteAllArtistProfiles.__name__}: {err}")
