@@ -63,48 +63,34 @@ def refreshArtists(artist_list):
         database = dbconnect.getDBConnection()
         artist_info_col = database["artist_info"]
 
+        deactivated_artists = list(getDeactivatedArtists())
+
         for artist in artist_list:
 
-            #artist_info = getArtistInfo(artist["id"])
-            #idx = [idx for idx, info in artist_info]
+            is_activated = True
+            for d_artist in deactivated_artists:
+                if artist["id"] == d_artist["id"]:
+                    print(f"\tInactive Artist ID {artist['id']}. No changes done.")
+                    is_activated = False
+                    break
 
-            artist_info_col.update_one({"id": artist["id"]},
-                                       {"$set": {
-                                           "name": artist["name"],
-                                           "genres": artist["genres"],
-                                           "popularity": artist["popularity"],
-                                           "followers": artist["followers"],
-                                           "tracks": artist["tracks"],
-                                           "status": "A",
-                                           "update_datetime": artist["update_datetime"]
-                                       }},
-                                       upsert=True)
+            if is_activated:
+                artist_info_col.update_one({"id": artist["id"]},
+                                           {"$set": {
+                                               "name": artist["name"],
+                                               "genres": artist["genres"],
+                                               "popularity": artist["popularity"],
+                                               "followers": artist["followers"],
+                                               "tracks": artist["tracks"],
+                                               "status": "A",
+                                               "update_datetime": artist["update_datetime"]
+                                           }},
+                                           upsert=True)
 
-        print(f"{fg.GREEN}Successfully added/updated documents in artist_info collection")
+        print(f"{fg.GREEN}Successfully updated the records")
 
     except Exception as err:
         print(f"{fg.RED}Unexpected error on {refreshArtists.__name__}: {err}")
-
-
-def searchByTrackName(keyword):
-    """
-    The function that searches tracks by track name using the specified keyword
-    :param str keyword: Keyword to search for track name
-    :return list artist_list: List of artists with track that matches the keyword
-    """
-    try:
-        database = dbconnect.getDBConnection()
-        artist_info_col = database["artist_info"]
-        artist_list = artist_info_col.find(
-            {"$and": [{"tracks.name": {"$regex": ".*" + keyword + ".*", "$options": "i"}},
-                      {"status": {"$ne": "I"}}]},
-            {"_id": 0})
-
-    except Exception as err:
-        print(f"{fg.RED}Unexpected error {searchByTrackName.__name__}: {err}")
-        artist_list = []
-
-    return artist_list
 
 
 def searchArtistInfo(key, keyword):
@@ -117,12 +103,23 @@ def searchArtistInfo(key, keyword):
     try:
         database = dbconnect.getDBConnection()
         artist_info_col = database["artist_info"]
-        artist_list = artist_info_col.find({"$and": [{key: {"$regex": ".*" + keyword + ".*", "$options": "i"}},
-                                                     {"status": {"$ne": "I"}}]},
-                                           {"_id": 0})
+        artist_list = artist_info_col.find({key: {"$regex": ".*" + keyword + ".*", "$options": "i"}}, {"_id": 0})
 
     except Exception as err:
         print(f"{fg.RED}Unexpected error {searchArtistInfo.__name__}: {err}")
+        artist_list = []
+
+    return artist_list
+
+
+def searchDeactivatedArtistInfo():
+    try:
+        database = dbconnect.getDBConnection()
+        artist_info_col = database["artist_info"]
+        artist_list = artist_info_col.find({"status": "I"}, {"_id": 0})
+
+    except Exception as err:
+        print(f"{fg.RED}Unexpected error {searchDeactivatedArtistInfo.__name__}: {err}")
         artist_list = []
 
     return artist_list
@@ -144,10 +141,49 @@ def getArtistInfo(artist_id):
     try:
         database = dbconnect.getDBConnection()
         artist_info_col = database["artist_info"]
-        artist_info = artist_info_col.find({"id": artist_id}, {"_id": 0, "id": 1, "name": 1, "status": 1})
+        artist_info = artist_info_col.find({"id": artist_id}, {"_id": 0})
 
     except Exception as err:
         print(f"{fg.RED}Unexpected error {getArtistInfo.__name__}: {err}")
         artist_info = None
 
     return artist_info
+
+
+def getAllArtistsByFollowers():
+    try:
+        database = dbconnect.getDBConnection()
+        artist_info_col = database["artist_info"]
+        artist_list = artist_info_col.find({"status": {"$ne": "I"}}, {"_id": 0}).sort("followers", -1)
+
+    except Exception as err:
+        print(f"{fg.RED}Unexpected error {getAllArtistsByFollowers.__name__}: {err}")
+        artist_list = None
+
+    return artist_list
+
+
+def getAllArtistsByPopularity():
+    try:
+        database = dbconnect.getDBConnection()
+        artist_info_col = database["artist_info"]
+        artist_list = artist_info_col.find({"status": {"$ne": "I"}}, {"_id": 0}).sort("popularity", -1)
+
+    except Exception as err:
+        print(f"{fg.RED}Unexpected error {getAllArtistsByPopularity.__name__}: {err}")
+        artist_list = None
+
+    return artist_list
+
+
+def getDeactivatedArtists():
+    try:
+        database = dbconnect.getDBConnection()
+        artist_info_col = database["artist_info"]
+        deactivated_artists = artist_info_col.find({"status": "I"}, {"_id": 0, "id": 1, "name": 1, "status": 1})
+
+    except Exception as err:
+        print(f"{fg.RED}Unexpected error {getDeactivatedArtists.__name__}: {err}")
+        deactivated_artists = None
+
+    return deactivated_artists

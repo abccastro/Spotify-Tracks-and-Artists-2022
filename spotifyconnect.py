@@ -80,7 +80,7 @@ def getSpotifyArtists(year):
             else:
                 print(f"\tRetrieved {len(artist_list)} artists")
         else:
-            print(f"{fg.GREEN}Total artists retrieved from Spotify: {len(artist_list)}")
+            print(f"{fg.GREEN}Total artists: {len(artist_list)}")
 
     except Exception as err:
         print(f"{fg.RED}Unexpected error {getSpotifyArtists.__name__}: {err}")
