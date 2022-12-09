@@ -36,13 +36,13 @@ pip install spotipy
 python spotifyApp.py
 ```
 
+## References
+
+* [Connect to Spotify API](https://cran.r-project.org/web/packages/spotidy/vignettes/Connecting-with-the-Spotify-API.html)
+* [Spotify Web API](https://developer.spotify.com/documentation/web-api/reference/#/)
+
 ## Contributors
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
-
-## References
-
-* [Connect to Spotify API](https://cran.r-project.org/web/packages/spotidy/vignettes/Connecting-with-the-Spotify-API.html)
-* [Spotify Web API](https://developer.spotify.com/documentation/web-api/reference/#/)
