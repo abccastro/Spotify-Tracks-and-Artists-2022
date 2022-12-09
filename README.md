@@ -8,15 +8,15 @@ This application data is currently limited to first 1000 Spotify tracks created 
 * Search for Artists (by Genre)
 * Search for Tracks (by Track Name)
 * List Deactivated Artist Profile
-3. View Reports
+2. View Reports
 * Top 10 Artists with Most Number of Followers
 * Top 10 Artists with Highest Popularity Index
 * Top 10 Tracks with Highest Popularity Index
 * Number of Artists by Popularity Index (80 to 100)
 * Number of Tracks by Popularity Index (80 to 100)
-5. Refresh Artists and Tracks
-6. Deactivate/Activate Artist Profile
-7. Delete All Artist Profiles
+3. Refresh Artists and Tracks
+4. Deactivate/Activate Artist Profile
+5. Delete All Artist Profiles
 
 
 ## Installation
@@ -34,7 +34,6 @@ pip install spotipy
 
 ## Contributing
 
-Pull requests are welcome. For major changes, please open an issue first
-to discuss what you would like to change.
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
