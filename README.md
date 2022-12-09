@@ -1,6 +1,6 @@
 # Spotify Artist and Tracks (2022)
 
-This application data is currently limited to first 1000 Spotify tracks created in 2022 and their corresponding artist. Data extracted from Spotify are stored in MongoDB Atlas.
+The application data is currently limited to first 1000 Spotify tracks created in 2022 and their corresponding artist. Data extracted from Spotify are stored in MongoDB Atlas.
 
 ## Installation
 
