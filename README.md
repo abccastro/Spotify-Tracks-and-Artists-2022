@@ -2,8 +2,6 @@
 
 The application data is currently limited to first 1000 Spotify tracks in 2022 and their corresponding artist. Data extracted from Spotify are stored in MongoDB Atlas.
 
-[Instructions to connect to Spotify API](https://cran.r-project.org/web/packages/spotidy/vignettes/Connecting-with-the-Spotify-API.html)
-
 ## Application Features
 1. Search for Artists or Tracks
 * Search for Artists (by Name)
@@ -46,4 +44,5 @@ Please make sure to update tests as appropriate.
 
 ## References
 
-* https://developer.spotify.com/documentation/web-api/reference/#/operations/get-track
+* [Connect to Spotify API](https://cran.r-project.org/web/packages/spotidy/vignettes/Connecting-with-the-Spotify-API.html)
+* [Spotify Web API](https://developer.spotify.com/documentation/web-api/reference/#/)
