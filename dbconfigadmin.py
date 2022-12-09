@@ -2,9 +2,10 @@ import pickle
 
 
 def main():
+    print("Database Configuration Admin")
     print("1. View Config")
     print("2. Add Config")
-    print("3. Delete")
+    print("3. Delete Config")
 
     while True:
         command = input("What do you want to do? ")
