@@ -1,23 +1,6 @@
 # Spotify Artist and Tracks (2022)
 
-This application data is currently limited to first 1000 Spotify tracks created in 2022 and their corresponding artist.
-
-**Features:**
-1. Search for Artists or Tracks
-* Search for Artists (by Name)
-* Search for Artists (by Genre)
-* Search for Tracks (by Track Name)
-* List Deactivated Artist Profile
-2. View Reports
-* Top 10 Artists with Most Number of Followers
-* Top 10 Artists with Highest Popularity Index
-* Top 10 Tracks with Highest Popularity Index
-* Number of Artists by Popularity Index (80 to 100)
-* Number of Tracks by Popularity Index (80 to 100)
-3. Refresh Artists and Tracks
-4. Deactivate/Activate Artist Profile
-5. Delete All Artist Profiles
-
+This application data is currently limited to first 1000 Spotify tracks created in 2022 and their corresponding artist. Data extracted from Spotify are stored in MongoDB Atlas.
 
 ## Installation
 
