@@ -21,7 +21,7 @@ This application data is currently limited to first 1000 Spotify tracks created 
 
 ## Installation
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install the following packges
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install the following packages
 ```bash
 pip install pymongo
 pip install enum
