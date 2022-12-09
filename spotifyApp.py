@@ -319,7 +319,7 @@ def loginAccount():
     is_login_account = False
     max_login_attempt = 3
 
-    account_list = readFile("accounts")
+    account_list = readFile("config/accounts")
 
     # If there are no errors reading the account file
     if account_list is not None:
