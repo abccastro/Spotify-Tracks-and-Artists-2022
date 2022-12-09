@@ -119,7 +119,7 @@ def getDeactivatedArtists():
     try:
         database = dbconnect.getDBConnection()
         artist_info_col = database["artist_info"]
-        deactivated_artists = artist_info_col.find({"status": "I"}, {"_id": 0, "id": 1, "name": 1, "status": 1})
+        deactivated_artists = artist_info_col.find({"status": "I"}, {"_id": 0})
 
     except Exception as err:
         print(f"{fg.RED}Unexpected error {getDeactivatedArtists.__name__}: {err}")
