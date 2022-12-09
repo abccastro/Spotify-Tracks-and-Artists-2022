@@ -32,6 +32,11 @@ pip install datetime
 pip install spotipy
 ```
 
+## Program Execution
+```bash
+python spotifyApp.py
+```
+
 ## Contributors
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
