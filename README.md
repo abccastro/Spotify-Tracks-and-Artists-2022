@@ -41,3 +41,7 @@ python spotifyApp.py
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
+
+## References
+
+* https://developer.spotify.com/documentation/web-api/reference/#/operations/get-track
