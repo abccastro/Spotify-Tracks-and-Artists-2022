@@ -250,11 +250,14 @@ def viewReport(report_type):
 
         case Report.Num_Track_Popularity.value:
 
-            track_list = list(dbconnect.getAllTracksByPopularity())
-            if len(track_list) == 0:
+            artist_track_list = list(dbconnect.getAllTracksByPopularity())
+            if len(artist_track_list) == 0:
                 return False
 
-            track_list = [track['tracks'][0] for track in track_list]
+            track_list = []
+            for tracks in artist_track_list:
+                for track in tracks['tracks']:
+                    track_list.append(track)
 
             popularity_counter = Counter([track['popularity'] for track in track_list if track['popularity'] >= 80])
             popularity_list = [i for i in range(80, 101)]
