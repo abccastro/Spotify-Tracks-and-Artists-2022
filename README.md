@@ -29,6 +29,8 @@ pip install collections
 pip install pickle
 pip install datetime
 pip install spotipy
+pip install numpy
+pip install matplotlib
 ```
 
 ## Program Execution
