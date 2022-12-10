@@ -344,7 +344,7 @@ def loginAccount():
                 print(f"{fg.RED}{ef.BRIGHT}Invalid username and/or password")
 
         if is_login_account:
-            print(f"{fg.GREEN}{ef.BRIGHT}Log In Successful")
+            print(f"{fg.GREEN}{ef.BRIGHT}Account validation successful")
 
     return is_login_account
 
