@@ -1,8 +1,11 @@
 """
+All functions related to graph creation
+
 Project Fall 2022 (BDM-11123)
 Submitted by:
 - Auradee Castro
 - Olivia Deguit
+- Bhumika Rajendra Babu
 """
 from matplotlib.ticker import MaxNLocator
 import numpy as np

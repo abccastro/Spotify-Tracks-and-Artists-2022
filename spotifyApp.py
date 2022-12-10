@@ -1,10 +1,13 @@
 """
-Extract Spotify tracks and artists for year 2022. Save the records in MongoDB and create visualization.
+Get first 1000 Spotify tracks and their corresponding artist for year 2022.
+Data extracted from Spotify are stored in MongoDB Atlas.
+Create data visualization on artist's popularity and followers, and tracks popularity.
 
 Project Fall 2022 (BDM-11123)
 Submitted by:
 - Auradee Castro
 - Olivia Deguit
+- Bhumika Rajendra Babu
 """
 import pickle
 

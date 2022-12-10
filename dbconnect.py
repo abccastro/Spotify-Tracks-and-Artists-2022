@@ -1,8 +1,11 @@
 """
+All functions related to MongoDB connection
+
 Project Fall 2022 (BDM-11123)
 Submitted by:
 - Auradee Castro
 - Olivia Deguit
+- Bhumika Rajendra Babu
 """
 import pickle
 import pymongo as pymongo
