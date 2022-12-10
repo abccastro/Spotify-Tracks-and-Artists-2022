@@ -9,7 +9,6 @@ Submitted by:
 """
 from datetime import datetime
 import dbconnect
-import spotifyconnect
 import spotipy
 from spotipy import SpotifyClientCredentials
 from colorama import Fore as fg, Back as bg, Style as ef, init
@@ -47,7 +46,7 @@ def getSpotifyArtists(year):
     curr_datetime = datetime.now()
 
     try:
-        sp = spotifyconnect.getSpotifyConnection()
+        sp = getSpotifyConnection()
 
         for i in range(0, 1000, 50):
             track_artist_list = sp.search(q='year:' + year, type='track', limit=50, offset=i, market="US")

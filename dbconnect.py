@@ -9,7 +9,6 @@ Submitted by:
 """
 import pickle
 import pymongo as pymongo
-import dbconnect
 from colorama import Fore as fg, Back as bg, Style as ef, init
 
 init(autoreset=True)
@@ -45,7 +44,7 @@ def getSpotifyConfig():
     :return map: Spotify's client ID and client secret
     """
     try:
-        database = dbconnect.getDBConnection()
+        database = getDBConnection()
         config_col = database["config"]
         config = config_col.find({})
 
@@ -62,7 +61,7 @@ def refreshArtists(artist_list):
     :param list artist_list: List of artists with tracks
     """
     try:
-        database = dbconnect.getDBConnection()
+        database = getDBConnection()
         artist_info_col = database["artist_info"]
 
         deactivated_artists = list(getDeactivatedArtists())
@@ -103,7 +102,7 @@ def searchArtistInfo(key, keyword):
     :return list artist_list: List of artists that matches the keyword
     """
     try:
-        database = dbconnect.getDBConnection()
+        database = getDBConnection()
         artist_info_col = database["artist_info"]
         artist_list = artist_info_col.find({key: {"$regex": ".*" + keyword + ".*", "$options": "i"}}, {"_id": 0})
 
@@ -120,7 +119,7 @@ def getDeactivatedArtists():
     :return list artist_list: List of deactivated artists
     """
     try:
-        database = dbconnect.getDBConnection()
+        database = getDBConnection()
         artist_info_col = database["artist_info"]
         deactivated_artists = artist_info_col.find({"status": "I"}, {"_id": 0})
 
@@ -139,7 +138,7 @@ def changeArtistInfoStatus(artist_id, status_flag):
     :return bool: True is successfully deactivate/inactivated. False otherwise.
     """
     try:
-        database = dbconnect.getDBConnection()
+        database = getDBConnection()
         artist_info_col = database["artist_info"]
         artist_info_col.update_one({"id": artist_id}, {"$set": {"status": "I" if status_flag else "A"}})
 
@@ -156,7 +155,7 @@ def getArtistInfo(artist_id):
     :return list artist_info: Artist information
     """
     try:
-        database = dbconnect.getDBConnection()
+        database = getDBConnection()
         artist_info_col = database["artist_info"]
         artist_info = artist_info_col.find({"id": artist_id}, {"_id": 0})
 
@@ -173,7 +172,7 @@ def getAllArtistsByFollowers():
     :return list artist_list: List of artists
     """
     try:
-        database = dbconnect.getDBConnection()
+        database = getDBConnection()
         artist_info_col = database["artist_info"]
         artist_list = artist_info_col.find({"status": {"$ne": "I"}}, {"_id": 0}).sort("followers", -1)
 
@@ -190,7 +189,7 @@ def getAllArtistsByPopularity():
     :return list artist_list: List of artists
     """
     try:
-        database = dbconnect.getDBConnection()
+        database = getDBConnection()
         artist_info_col = database["artist_info"]
         artist_list = artist_info_col.find({"status": {"$ne": "I"}}, {"_id": 0}).sort("popularity", -1)
 
@@ -207,7 +206,7 @@ def getAllTracksByPopularity():
     :return list artist_list: List of artists
     """
     try:
-        database = dbconnect.getDBConnection()
+        database = getDBConnection()
         artist_info_col = database["artist_info"]
         artist_list = artist_info_col.find({"status": {"$ne": "I"}}, {"_id": 0, "tracks": 1}).sort("tracks.popularity", -1)
 
@@ -223,7 +222,7 @@ def deleteAllArtistProfiles():
     The function that deletes all artist profiles
     """
     try:
-        database = dbconnect.getDBConnection()
+        database = getDBConnection()
         artist_info_col = database["artist_info"]
         artist_info_col.delete_many({})
         print(f"{fg.GREEN}Successfully deleted all records")

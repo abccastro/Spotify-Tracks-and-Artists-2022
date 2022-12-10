@@ -89,7 +89,7 @@ def startApplication():
                 print("4. Number of Artists by Popularity Index (80 to 100)")
                 print("5. Number of Tracks by Popularity Index (80 to 100)")
 
-                req_report = input(f"\n{ef.BRIGHT}Select one option from the list (1, 2 or 3): ").strip()
+                req_report = input(f"\n{ef.BRIGHT}Select one option from the list (1, 2, 3, 4 or 5): ").strip()
                 if req_report not in [elem.value for elem in Report]:
                     print(f"{fg.RED}Invalid selection")
                 else:
