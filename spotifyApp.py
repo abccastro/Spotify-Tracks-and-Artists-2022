@@ -44,6 +44,7 @@ class Report(Enum):
     Num_Artist_Popularity = "4"
     Num_Track_Popularity = "5"
 
+
 def startApplication():
     print(f"{fg.CYAN}+++++++++++++++++++++++++++++++++++++++++++++++++++++")
     print(f"{fg.CYAN}+         SPOTIFY ARTISTS AND TRACKS (2022)         +")
@@ -108,13 +109,22 @@ def startApplication():
                     print(f"{fg.RED}Invalid artist ID")
 
             elif req_command == Command.Delete.value:
-                is_login = loginAccount()
-                if is_login:
+                print(f"\n{bg.YELLOW}{fg.BLACK} Only authorized users are allowed to delete all artist profiles ")
+                username = input("Username: ")
+                password = input("Password: ")
+
+                is_valid_account = dbconnect.validateAccount(username, password)
+
+                if is_valid_account:
+                    print(f"{fg.GREEN}{ef.BRIGHT}Account validation successful")
+
                     req_delete = input(f"\n{ef.BRIGHT}Are you sure you want to delete all the records? [y/Y]: ").lower().strip()
                     if req_delete == 'y':
                         dbconnect.deleteAllArtistProfiles()
                     else:
                         print("No changes done")
+                else:
+                    print(f"{fg.RED}{ef.BRIGHT}Invalid username and/or password")
 
             is_continue = ""
             while is_continue != "n" and is_continue != "y":
@@ -189,12 +199,12 @@ def viewReport(report_type):
     match report_type:
         case Report.Artist_Follower.value:
 
-            artist_list = list(dbconnect.getAllArtistsByFollowers())
+            artist_list = list(dbconnect.getAllArtistsByFollowers(10))
             if len(artist_list) == 0:
                 return False
 
-            artist_names = [artist_list[idx]['name'] for idx in range(10)]
-            artist_followers = [artist_list[idx]['followers'] for idx in range(10)]
+            artist_names = [artist['name'] for artist in artist_list]
+            artist_followers = [artist['followers'] for artist in artist_list]
 
             visualization.showBarGraph(artist_followers,
                                        artist_names,
@@ -203,12 +213,12 @@ def viewReport(report_type):
 
         case Report.Artist_Popularity.value:
 
-            artist_list = list(dbconnect.getAllArtistsByPopularity())
+            artist_list = list(dbconnect.getAllArtistsByPopularity(10))
             if len(artist_list) == 0:
                 return False
 
-            artist_names = [artist_list[idx]['name'] for idx in range(10)]
-            artist_popularity = [artist_list[idx]['popularity'] for idx in range(10)]
+            artist_names = [artist['name'] for artist in artist_list]
+            artist_popularity = [artist['popularity'] for artist in artist_list]
 
             visualization.showBarGraph(artist_popularity,
                                        artist_names,
@@ -218,11 +228,11 @@ def viewReport(report_type):
 
         case Report.Track_Popularity.value:
 
-            track_list = list(dbconnect.getAllTracksByPopularity())
-            if len(track_list) == 0:
+            artist_track_list = list(dbconnect.getAllTracksByPopularity(10))
+            if len(artist_track_list) == 0:
                 return False
 
-            track_list = [track_list[idx]['tracks'][0] for idx in range(10)]
+            track_list = [track['tracks'][0] for track in artist_track_list]
             track_names = [track['name'] for track in track_list]
             track_popularity = [track['popularity'] for track in track_list]
 
@@ -314,57 +324,6 @@ def deactivateArtistInfo(artist_id):
             print("No changes done")
 
     return True
-
-
-def loginAccount():
-    """
-    The function that prompts authorized users to log into the application
-    :return bool: True for successful login. False otherwise.
-    """
-    login_attempt = 0
-    is_login_account = False
-    max_login_attempt = 3
-
-    account_list = readFile("config/accounts")
-
-    # If there are no errors reading the account file
-    if account_list is not None:
-
-        print(f"\n{bg.YELLOW}{fg.BLACK} Only authorized users are allowed to delete all artist profiles ")
-        username = input("Username: ")
-        password = input("Password: ")
-
-        for account in account_list:
-            if username == account[0] and password == account[1]:
-                is_login_account = True
-                break
-        else:
-            login_attempt += 1
-            if login_attempt < max_login_attempt:
-                print(f"{fg.RED}{ef.BRIGHT}Invalid username and/or password")
-
-        if is_login_account:
-            print(f"{fg.GREEN}{ef.BRIGHT}Account validation successful")
-
-    return is_login_account
-
-
-def readFile(filename):
-    """
-    The function that reads content from a file
-    :param str filename: Filename
-    :return list: File content
-    """
-    try:
-        with open(filename, "rb") as file:
-            content_list = pickle.load(file)
-    except EOFError:
-        content_list = []
-    except Exception as err:
-        print(f"{fg.RED}Unexpected error: {err}")
-        content_list = None
-
-    return content_list
 
 
 def popularityCounter(popularity_list, popularity_counter):

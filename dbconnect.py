@@ -166,7 +166,7 @@ def getArtistInfo(artist_id):
     return artist_info
 
 
-def getAllArtistsByFollowers():
+def getAllArtistsByFollowers(limit=1000):
     """
     The function that gets all artists sorted by number of followers
     :return list artist_list: List of artists
@@ -174,7 +174,7 @@ def getAllArtistsByFollowers():
     try:
         database = getDBConnection()
         artist_info_col = database["artist_info"]
-        artist_list = artist_info_col.find({"status": {"$ne": "I"}}, {"_id": 0}).sort("followers", -1)
+        artist_list = artist_info_col.find({"status": {"$ne": "I"}}, {"_id": 0}).sort("followers", -1).limit(limit)
 
     except Exception as err:
         print(f"{fg.RED}Unexpected error {getAllArtistsByFollowers.__name__}: {err}")
@@ -183,7 +183,7 @@ def getAllArtistsByFollowers():
     return artist_list
 
 
-def getAllArtistsByPopularity():
+def getAllArtistsByPopularity(limit=1000):
     """
     The function that gets all artists sorted by the popularity index
     :return list artist_list: List of artists
@@ -191,7 +191,7 @@ def getAllArtistsByPopularity():
     try:
         database = getDBConnection()
         artist_info_col = database["artist_info"]
-        artist_list = artist_info_col.find({"status": {"$ne": "I"}}, {"_id": 0}).sort("popularity", -1)
+        artist_list = artist_info_col.find({"status": {"$ne": "I"}}, {"_id": 0}).sort("popularity", -1).limit(limit)
 
     except Exception as err:
         print(f"{fg.RED}Unexpected error {getAllArtistsByPopularity.__name__}: {err}")
@@ -200,7 +200,7 @@ def getAllArtistsByPopularity():
     return artist_list
 
 
-def getAllTracksByPopularity():
+def getAllTracksByPopularity(limit=1000):
     """
     The function that gets all artists sorted by the tracks' popularity index
     :return list artist_list: List of artists
@@ -208,7 +208,7 @@ def getAllTracksByPopularity():
     try:
         database = getDBConnection()
         artist_info_col = database["artist_info"]
-        artist_list = artist_info_col.find({"status": {"$ne": "I"}}, {"_id": 0, "tracks": 1}).sort("tracks.popularity", -1)
+        artist_list = artist_info_col.find({"status": {"$ne": "I"}}, {"_id": 0, "tracks": 1}).sort("tracks.popularity", -1).limit(limit)
 
     except Exception as err:
         print(f"{fg.RED}Unexpected error {getAllArtistsByPopularity.__name__}: {err}")
@@ -228,3 +228,18 @@ def deleteAllArtistProfiles():
         print(f"{fg.GREEN}Successfully deleted all records")
     except Exception as err:
         print(f"{fg.RED}Unexpected error {deleteAllArtistProfiles.__name__}: {err}")
+
+
+def validateAccount(username, password):
+    """
+    The function that validates account
+    """
+    try:
+        database = getDBConnection()
+        accounts_col = database["accounts"]
+        account = accounts_col.find_one({"$and": [{"username": username}, {"password": password}]})
+    except Exception as err:
+        print(f"{fg.RED}Unexpected error {deleteAllArtistProfiles.__name__}: {err}")
+        return False
+
+    return True if account is not None and len(account) != 0 else False
