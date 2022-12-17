@@ -165,7 +165,7 @@ def searchArtistInfo(selection):
                     deactivated = popular = ""
                     if artist['status'] == 'I':
                         deactivated = "(DEACTIVATED)"
-                    if track['popularity'] > 80:
+                    if track['popularity'] >= 80:
                         popular = "\u2606"
 
                     print()
@@ -178,7 +178,7 @@ def searchArtistInfo(selection):
             deactivated = popular = ""
             if artist['status'] == 'I':
                 deactivated = "(DEACTIVATED)"
-            if artist['popularity'] > 80:
+            if artist['popularity'] >= 80:
                 popular = "\u2606"
 
             print()
