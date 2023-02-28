@@ -1,6 +1,6 @@
 # Spotify Tracks and Artists (2022)
 
-The application data is currently limited to first 1000 Spotify tracks and their corresponding artist for year 2022. Data extracted from Spotify are stored in MongoDB Atlas.
+The primary goal of this project is to utilize the Spotipy Python package to connect to Spotify's API and extract information on the first 1000 tracks and their corresponding artists for the year 2022. This data is then saved to MongoDB Atlas, which allows for easy access and utilization of PyMongo for searching, updating, or deleting artist profiles. Additionally, Numpy and Matplotlib are employed to produce data visualizations for the generated reports.
 
 ## Application Features
 1. Search for Artists or Tracks
